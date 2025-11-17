@@ -1,0 +1,35 @@
+
+#Ignorando entorno virtual llamado TrbIA completo
+
+/TrbIA
+
+#Ignorando carpetas propias del entorno virtual (por si acaso)
+
+etc/
+Include/
+Lib/
+pyvenv.cfg
+Scripts/
+share/
+
+#Ignorando carpeta sensible
+claves/
+
+
+# Cachés de Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Archivos de configuración
+.env
+*.log
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de editores
+.vscode/
+
