@@ -51,6 +51,13 @@
 	- El código irá separado en diferentes módulos, para separar el flujo principal de las funciones o demás ¿...?
 	
 	(...)
+	
+	
+	SOBRE EL MODELO LOCAL:
+	
+		- El modelo local será el encargado de redactar el correo.
+		- El modelo local recibe un pdf con un email en un tono (formal, neutro, informal)
+		- El modelo local tomará pdf y redactará una salida con el tono especificado por el usuario
 
 3. ORGANIZACIÓN DEL ÁRBOL DE DIRECTORIOS DEL PROYECTO (o cómo tu veas, ya me dices)
 -----------------------------------------------------------------------------------
