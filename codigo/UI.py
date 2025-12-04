@@ -78,11 +78,24 @@ with col1:
 # RIGHT SIDE — TEXT AREA + FILE UPLOAD
 # ===========================================================
 with col2:
-    st.subheader("📝 Mejorador de correos")
+    st.subheader("📝 Text & File Input")
 
-    text_area_value = st.text_area("Enter your text:")
+    # Dropdown menu
+    tone = st.selectbox(
+        "Seleccione el tono:",
+        ["neutral", "brusco", "educado", "profesional"]
+    )
 
+    # File upload
     uploaded_file = st.file_uploader("Upload a file")
+    # Action button
+    if st.button("Aplicar tono"):
+        st.success(f"Tono seleccionado: {tone}")
+        st.success(obtener_correo_usuario(uploaded_file.name))
+
+    # Text area
+    text_area_value = st.text_area("Enter your text:")  
 
     if uploaded_file:
         st.success(f"Uploaded: {uploaded_file.name}")
+        file_name = uploaded_file.name
