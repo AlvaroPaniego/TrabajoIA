@@ -1,14 +1,14 @@
 import streamlit as st
-
+import modelo_api as ma
 st.set_page_config(page_title="Chat + Input UI", layout="wide")
 st.markdown("""
 <style>
 .stChatMessageContent {
-    color: white !important;
+    color: black !important;
 }
 
 .stMarkdown p, .stMarkdown span, .stMarkdown {
-    color: white !important;
+    color: black !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -67,7 +67,7 @@ with col1:
         st.session_state.chat_history.append(("user", msg))
 
         # Bot reply
-        bot_reply = f"Bot: {msg}"
+        bot_reply = f"Bot: {ma.chat_with_memory(msg)}"
         st.session_state.chat_history.append(("assistant", bot_reply))
 
         st.session_state.chat_buffer = ""     # Clear buffer
@@ -91,7 +91,7 @@ with col2:
     # Action button
     if st.button("Aplicar tono"):
         st.success(f"Tono seleccionado: {tone}")
-        st.success(obtener_correo_usuario(uploaded_file.name))
+        #st.success(obtener_correo_usuario(uploaded_file.name))
 
     # Text area
     text_area_value = st.text_area("Enter your text:")  
