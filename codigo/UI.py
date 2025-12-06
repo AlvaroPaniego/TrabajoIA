@@ -1,5 +1,11 @@
 import streamlit as st
 
+from modelo_local import obtener_correo_usuario, convertir_tono_correo
+from acceso_clave import cargar_clave
+
+modelo = 'llama3.2:1b'
+
+
 st.set_page_config(page_title="Chat + Input UI", layout="wide")
 st.markdown("""
 <style>
@@ -38,7 +44,7 @@ def store_and_clear_input():
 # ---------------------------------
 st.title("✨ AsistoMail")
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 # ===========================================================
 # LEFT SIDE — CHATBOT (now using correct Streamlit components)
@@ -78,24 +84,57 @@ with col1:
 # RIGHT SIDE — TEXT AREA + FILE UPLOAD
 # ===========================================================
 with col2:
+    
     st.subheader("📝 Text & File Input")
-
+    
     # Dropdown menu
     tone = st.selectbox(
         "Seleccione el tono:",
-        ["neutral", "brusco", "educado", "profesional"]
+        #['informal', 'neutro', 'formal', 'profesional' ]
+        ['profesional', 'formal', 'neutro', 'informal']
     )
 
     # File upload
-    uploaded_file = st.file_uploader("Upload a file")
+    uploaded_file = st.file_uploader("Upload a file", type='pdf')
+    
+    if uploaded_file is not None:
+        
+        correo_original = obtener_correo_usuario(uploaded_file)
+        st.text("\nCorreo Original del Usuario:")
+        st.text(correo_original)
+
+    
+    
     # Action button
-    if st.button("Aplicar tono"):
-        st.success(f"Tono seleccionado: {tone}")
-        st.success(obtener_correo_usuario(uploaded_file.name))
 
-    # Text area
-    text_area_value = st.text_area("Enter your text:")  
-
+    if uploaded_file is None:
+        st.warning("Suba un archivo primero")
+        st.button('Aplicar tono', disabled=True)
+    else:
+        if st.button("Aplicar tono"):
+            st.success(f"Tono seleccionado: {tone}")
+            st.text(convertir_tono_correo(tone, correo_original, modelo))
+    
     if uploaded_file:
-        st.success(f"Uploaded: {uploaded_file.name}")
-        file_name = uploaded_file.name
+                st.success(f"Uploaded: {uploaded_file.name}")
+                file_name = uploaded_file.name
+
+
+  
+with col3:    
+
+         
+    # Text area
+    st.subheader("📝 Describa su correo")
+    text_area_value = st.text_area("También puede describir aquí su correo y Asistomail lo redactará en el tono selecionado.") 
+    #st.write(type(text_area_value))
+    if text_area_value.strip(): #solo entra si hay texto. Con strip() para eliminar espacios, que no pueda entrar si el usr mete espacios vacíos
+        st.text(convertir_tono_correo(tone, text_area_value, modelo)) 
+    else:
+        st.warning("Por favor, introduzca un correo antes de aplicar el tono.")
+
+    
+            
+
+            
+
