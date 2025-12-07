@@ -6,15 +6,16 @@ from acceso_clave import cargar_clave
 modelo = 'llama3.2:1b'
 
 
+import modelo_api as ma
 st.set_page_config(page_title="Chat + Input UI", layout="wide")
 st.markdown("""
 <style>
 .stChatMessageContent {
-    color: white !important;
+    color: black !important;
 }
 
 .stMarkdown p, .stMarkdown span, .stMarkdown {
-    color: white !important;
+    color: black !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -73,7 +74,7 @@ with col1:
         st.session_state.chat_history.append(("user", msg))
 
         # Bot reply
-        bot_reply = f"Bot: {msg}"
+        bot_reply = f"Bot: {ma.chat_with_memory(msg)}"
         st.session_state.chat_history.append(("assistant", bot_reply))
 
         st.session_state.chat_buffer = ""     # Clear buffer
