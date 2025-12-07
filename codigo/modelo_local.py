@@ -51,7 +51,7 @@ def convertir_tono_correo (tono, correo, modelo):
             }
         ]
 
-        respuesta = ollama.chat(model=modelo, messages=peticion_al_modelo)
+        respuesta = ollama.chat(model=modelo, messages=peticion_al_modelo, options ={'temperature':0.3})
         return respuesta['message']['content']
 
        
