@@ -1,17 +1,30 @@
 import ollama 
 import fitz #Para subir ficheros
+import io
 
 
-ruta_correo_usuario = '../textos/correo_1.pdf'
+
+ruta_correo_usuario = '../textos/correo_4.pdf'
 
 modelo = 'llama3.2:1b'
 
-def obtener_correo_usuario (ruta):
 
-    correo_usr = fitz.open(ruta)
-    texto_correo = ''
-    for correo in correo_usr:
-        texto_correo = texto_correo + correo.get_text()
+
+#st.file_uploader() devuelve un objeto de tipo UploadedFile
+#fitz.open() no admite directamente ese tipo de objetos pero sí admite streams(buffer en RAM que se comporta como un archivo)
+#Por eso hay que convertir primero el objeto UploadedFile a stream con io.Bytes() y guardarlo en una variable (pdf_stream)
+#Ahora fitz.open(stream = pdf_stream) puede abrirlo como si fuera un archivo en memoria
+
+
+def obtener_correo_usuario (pdf_obj):
+
+    pdf_stream = io.BytesIO(pdf_obj.read()) #convertido pdf_obj a stream (buffer en memoria que se comporta como un archivo) 
+    with fitz.open(stream = pdf_stream, filetype='pdf') as correo_usr:
+        texto_correo = ''
+
+        for correo in correo_usr:
+            texto_correo = texto_correo + correo.get_text('text')
+ 
     return texto_correo
 
 correo_usuario = ''
@@ -26,34 +39,25 @@ def convertir_tono_correo (tono, correo, modelo):
                 'role': 'system',
                 'content': (
                 f'Eres un asistente que escribe emails para una empresa de reparación de equipos informáticos\n'
-                f'Tu estilo debe adaptarse al nivel de formalidad indicado en: {tono}.\n'
-                f'Tus repuestas deben estar adaptadas al contexto.\n'
-                f'Si la petición {correo} no forma parte del contexto reparación de equipos informáticos, no generes el correo' 
+                f'Tu tarea es adaptar el estilo del correo al tono indicado.\n'
+                
                 )  
             },
+
             {
                 'role': 'user',
-                'content': f"Redacta un nuevo correo con el siguiente tono: {tono} en base al correo: {correo}"
+                'content': f'Por favor, reescribe este correo: {correo} en tono: {tono}'
+          
             }
         ]
 
         respuesta = ollama.chat(model=modelo, messages=peticion_al_modelo)
         return respuesta['message']['content']
 
-        #print (respuesta['message']['content'])
-        
+       
     except Exception as e:
 
         return f"Error!!!: {e}"
 
         
-
-
-#SALIDAS:
-
-correo_usuario = obtener_correo_usuario(ruta_correo_usuario)
-print('\n\033[91m(CORREO USUARIO)\033[0m\n')
-print(correo_usuario)
-print('\n\033[92m(CORREO CORREGIDO)\033[0m\n')
-print(convertir_tono_correo('formal', correo_usuario, modelo))
 
