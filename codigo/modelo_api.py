@@ -3,7 +3,8 @@ from groq import Groq
 
 from acceso_clave import cargar_clave
 
-api_key = cargar_clave('API_KEY', 'TrabajoIA/claves/api_key.env')
+#api_key = cargar_clave('API_KEY', 'TrabajoIA/claves/api_key.env')
+api_key = cargar_clave('API_KEY', '../claves/api_key.env')
 #print (f'La clave es: {api_key}')
 
 client = Groq(api_key = api_key)
